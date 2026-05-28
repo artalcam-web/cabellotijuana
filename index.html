@@ -226,18 +226,102 @@
     }
 
     /* ====================================
-       VIDEO SECTION
+       STATS BANNER
     ==================================== */
-    .video-section {
-      padding: 50px 20px; background: #0a0f1e; text-align: center;
+    .stats-banner {
+      background: linear-gradient(135deg, #0a0f1e 0%, #0d1b3e 100%);
+      padding: 50px 20px;
     }
-    .video-section h2 {
-      font-size: 1.7rem; color: white; margin-bottom: 24px; font-weight: 700;
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; max-width: 900px; margin: 0 auto;
     }
-    .video-section video {
-      max-width: 860px; width: 100%; border-radius: 16px;
-      box-shadow: 0 12px 40px rgba(0,107,255,0.4);
+    .stat-item {
+      text-align: center; padding: 20px 10px;
+      border-right: 1px solid rgba(255,255,255,0.1);
     }
+    .stat-item:last-child { border-right: none; }
+    .stat-number {
+      display: block; font-size: 2.4rem; font-weight: 900;
+      background: linear-gradient(135deg, #006BFF, #0AE8F0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text; line-height: 1.1; margin-bottom: 8px;
+    }
+    .stat-label {
+      display: block; color: #9ca3af; font-size: 0.85rem;
+      font-weight: 500; line-height: 1.4;
+    }
+    @media (max-width: 600px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat-item:nth-child(2) { border-right: none; }
+      .stat-item:nth-child(1),
+      .stat-item:nth-child(2) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    }
+
+    /* ====================================
+       PROCESS STEPS
+    ==================================== */
+    .process-section {
+      padding: 70px 20px; background: #0a0f1e; text-align: center;
+    }
+    .process-section h2 { font-size: 2rem; color: white; margin-bottom: 14px; font-weight: 800; }
+    .process-section .section-subtitle { color: #9ca3af; margin-bottom: 50px; }
+    .process-steps {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; max-width: 1000px; margin: 0 auto;
+      position: relative;
+    }
+    .process-steps::before {
+      content: ''; position: absolute; top: 36px; left: 12.5%; right: 12.5%;
+      height: 2px; background: linear-gradient(90deg, #006BFF, #0AE8F0);
+      z-index: 0;
+    }
+    .process-step {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px; padding: 32px 20px; position: relative; z-index: 1;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .process-step:hover {
+      border-color: #006BFF; box-shadow: 0 8px 30px rgba(0,107,255,0.2);
+    }
+    .step-number {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: linear-gradient(135deg, #006BFF, #0AE8F0);
+      color: white; font-size: 1.3rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px auto;
+    }
+    .process-step h3 { color: white; font-size: 1rem; font-weight: 700; margin-bottom: 10px; }
+    .process-step p { color: #9ca3af; font-size: 0.88rem; line-height: 1.6; }
+    @media (max-width: 700px) {
+      .process-steps { grid-template-columns: repeat(2, 1fr); }
+      .process-steps::before { display: none; }
+    }
+    @media (max-width: 400px) {
+      .process-steps { grid-template-columns: 1fr; }
+    }
+
+    /* ====================================
+       TRUST SECTION
+    ==================================== */
+    .trust-section {
+      padding: 70px 20px; background: #f0f4f8; text-align: center;
+    }
+    .trust-section h2 { font-size: 2rem; color: #1f2937; margin-bottom: 14px; font-weight: 800; }
+    .trust-grid {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      justify-content: center; max-width: 800px; margin: 0 auto;
+    }
+    .trust-item {
+      display: flex; align-items: center; gap: 10px;
+      background: white; border: 1px solid #e5e7eb;
+      border-radius: 50px; padding: 12px 22px;
+      font-weight: 600; font-size: 0.9rem; color: #1f2937;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+    .trust-item:hover { box-shadow: 0 4px 16px rgba(0,107,255,0.12); border-color: #006BFF; }
+    .trust-item i { color: #006BFF; font-size: 1.1rem; }
 
     /* ====================================
        WHY CHOOSE US
@@ -652,15 +736,27 @@
   </section>
 
   <!-- ================================================
-       VIDEO: Testimonio de paciente
+       STATS BANNER — Social Proof
   ================================================ -->
-  <section class="video-section">
-    <h2>Resultados Reales: Testimonio de Paciente</h2>
-    <video controls preload="none" poster="/images/promo-banner.png"
-           aria-label="Video: testimonio de paciente trasplante capilar IHTC Capilaris">
-      <source src="/videos/spot1.mp4" type="video/mp4">
-      Tu navegador no soporta video HTML5. <a href="/videos/spot1.mp4">Descarga el video</a>.
-    </video>
+  <section class="stats-banner" aria-label="Estadísticas IHTC Capilaris">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">500+</span>
+        <span class="stat-label">Pacientes Satisfechos</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">5.0★</span>
+        <span class="stat-label">Calificación Promedio</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">FUE+DHI</span>
+        <span class="stat-label">Técnicas de Vanguardia</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">100%</span>
+        <span class="stat-label">Evaluación Gratuita</span>
+      </div>
+    </div>
   </section>
 
   <!-- ================================================
@@ -991,15 +1087,33 @@
   </section>
 
   <!-- ================================================
-       VIDEO: Proceso FUE
+       PROCESO — 4 Pasos
   ================================================ -->
-  <section class="video-section">
-    <h2>Nuestro Proceso de Trasplante FUE &amp; DHI</h2>
-    <video controls preload="none" poster="/images/promo-banner.png"
-           aria-label="Video en cámara lenta: extracción e implantación FUE en IHTC Capilaris">
-      <source src="/videos/slow-motion.mp4" type="video/mp4">
-      Tu navegador no soporta video HTML5. <a href="/videos/slow-motion.mp4">Descarga el video</a>.
-    </video>
+  <section class="process-section" aria-labelledby="process-heading">
+    <h2 id="process-heading">Tu Camino hacia el Cabello Natural</h2>
+    <p class="section-subtitle">Un proceso claro, seguro y personalizado — desde la primera consulta hasta los resultados finales.</p>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">1</div>
+        <h3>Evaluación Gratuita</h3>
+        <p>El Dr. Rosas analiza tu caso, determina el número de injertos y diseña tu nueva línea de cabello sin costo ni compromiso.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">2</div>
+        <h3>Extracción FUE</h3>
+        <p>Extraemos folículos uno a uno de la zona donante con precisión milimétrica. Mínimamente invasivo, sin cicatrices visibles.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">3</div>
+        <h3>Implantación DHI</h3>
+        <p>Implantamos cada folículo con el implantador Choi, controlando ángulo, dirección y densidad para un resultado 100% natural.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">4</div>
+        <h3>Resultado Permanente</h3>
+        <p>A los 12–18 meses tu cabello luce denso, natural y permanente. Los folículos trasplantados no se caen.</p>
+      </div>
+    </div>
   </section>
 
   <!-- ================================================
@@ -1080,15 +1194,21 @@
 
 
   <!-- ================================================
-       VIDEO SPOT 2 — Spot Institucional
+       TRUST / CERTIFICACIONES
   ================================================ -->
-  <section class="video-section">
-    <h2>Recupera Tu Cabello — IHTC Capilaris Tijuana</h2>
-    <video controls preload="none" poster="/images/promo-banner.png"
-           aria-label="Video spot institucional: trasplante capilar IHTC Capilaris">
-      <source src="/videos/spot2.mp4" type="video/mp4">
-      Tu navegador no soporta video HTML5. <a href="/videos/spot2.mp4">Descarga el video</a>.
-    </video>
+  <section class="trust-section" aria-labelledby="trust-heading">
+    <h2 id="trust-heading">Tu Confianza, Nuestra Prioridad</h2>
+    <p class="section-subtitle">Cada paciente de IHTC Capilaris recibe atención médica certificada, tecnología de vanguardia y seguimiento personalizado en cada etapa.</p>
+    <div class="trust-grid">
+      <div class="trust-item"><i class="fas fa-shield-halved"></i> Médico Certificado</div>
+      <div class="trust-item"><i class="fas fa-id-card"></i> Cédula Profesional Verificada</div>
+      <div class="trust-item"><i class="fas fa-star"></i> 5.0 ★ — +100 Reseñas</div>
+      <div class="trust-item"><i class="fab fa-whatsapp"></i> Seguimiento por WhatsApp</div>
+      <div class="trust-item"><i class="fas fa-calendar-check"></i> Evaluación 100% Gratuita</div>
+      <div class="trust-item"><i class="fas fa-lock"></i> Sitio Seguro HTTPS</div>
+      <div class="trust-item"><i class="fas fa-clock"></i> Atención Lun–Sáb</div>
+      <div class="trust-item"><i class="fas fa-map-marker-alt"></i> Torre Quatro, Zona Río</div>
+    </div>
   </section>
 
   <!-- ================================================
