@@ -269,27 +269,43 @@
     ==================================== */
     .surgeons-section { padding: 70px 20px; background: white; text-align: center; }
     .surgeons-section h2 { font-size: 2rem; color: #1f2937; margin-bottom: 14px; font-weight: 800; }
-    .surgeons-grid { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 1100px; margin: 0 auto; }
-    .surgeon-card {
-      background: #f9fafb; border-radius: 20px; padding: 36px 30px;
-      border: 1px solid #e5e7eb; text-align: center; transition: all 0.3s ease;
+    /* Layout horizontal: foto izquierda, bio derecha */
+    .surgeon-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 48px;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: left;
     }
-    .surgeon-card:hover { box-shadow: 0 8px 24px rgba(0,107,255,0.12); border-color: #006BFF; }
-    .surgeon-photo-placeholder {
-      width: 140px; height: 140px; border-radius: 50%; overflow: hidden;
-      margin: 0 auto 20px; background: linear-gradient(135deg, #006BFF, #0AE8F0);
-      display: flex; align-items: center; justify-content: center;
+    .surgeon-photo-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 40px rgba(0,107,255,0.18);
     }
-    .surgeon-photo { width: 100%; height: 100%; object-fit: cover; }
-    .surgeon-card h3 { font-size: 1.5rem; color: #1f2937; font-weight: 800; margin-bottom: 6px; }
-    .surgeon-title { color: #006BFF; font-weight: 600; margin-bottom: 16px; font-size: 1rem; }
-    .surgeon-credentials { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+    .surgeon-photo-wrap img {
+      width: 100%; height: auto; display: block; object-fit: cover;
+    }
+    .surgeon-content h3 { font-size: 1.6rem; color: #1f2937; font-weight: 800; margin-bottom: 6px; }
+    .surgeon-title { color: #006BFF; font-weight: 600; margin-bottom: 18px; font-size: 1rem; display: block; }
+    .surgeon-credentials { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
     .credential-badge {
       background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8;
       padding: 6px 14px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
       display: flex; align-items: center; gap: 6px;
     }
-    .surgeon-bio { color: #4b5563; line-height: 1.7; font-size: 0.97rem; max-width: 600px; margin: 0 auto; }
+    .surgeon-bio { color: #4b5563; line-height: 1.7; font-size: 0.97rem; margin-bottom: 20px; }
+    .surgeon-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #006BFF; font-weight: 700; font-size: 0.95rem; text-decoration: none;
+      border-bottom: 2px solid #bfdbfe; padding-bottom: 2px; transition: color 0.2s;
+    }
+    .surgeon-link:hover { color: #0052cc; border-color: #006BFF; }
+    @media (max-width: 700px) {
+      .surgeon-layout { grid-template-columns: 1fr; gap: 28px; text-align: center; }
+      .surgeon-credentials { justify-content: center; }
+    }
 
     /* ====================================
        COST COMPARISON
@@ -693,12 +709,19 @@
   <section class="surgeons-section" aria-labelledby="surgeons-heading">
     <h2 id="surgeons-heading">Conoce a Tu Especialista</h2>
     <p class="section-subtitle">Credenciales verificadas. Experiencia comprobada. Tu transformación en las mejores manos.</p>
-    <div class="surgeons-grid" style="grid-template-columns:1fr; max-width:520px;">
 
-      <div class="surgeon-card">
-        <img src="/images/doctor-rosas.jpg" alt="Dr. José Julián Rosas — Especialista en Trasplante Capilar FUE y DHI, IHTC Capilaris Tijuana" class="surgeon-photo">
+    <div class="surgeon-layout">
+
+      <!-- FOTO -->
+      <div class="surgeon-photo-wrap">
+        <img src="/images/doctor-rosas.jpg"
+             alt="Dr. José Julián Rosas — Especialista en Trasplante Capilar FUE y DHI, IHTC Capilaris Tijuana">
+      </div>
+
+      <!-- BIO -->
+      <div class="surgeon-content">
         <h3>Dr. José Julián Rosas</h3>
-        <p class="surgeon-title">Especialista en Trasplante Capilar · FUE &amp; DHI</p>
+        <span class="surgeon-title">Especialista en Trasplante Capilar · FUE &amp; DHI</span>
         <div class="surgeon-credentials">
           <span class="credential-badge"><i class="fas fa-graduation-cap"></i> Médico Certificado</span>
           <span class="credential-badge"><i class="fas fa-id-card"></i> Cédula Profesional Verificada</span>
@@ -708,7 +731,9 @@
           </span>
         </div>
         <p class="surgeon-bio">El Dr. José Julián Rosas es el especialista principal en trasplante capilar de IHTC Capilaris en Tijuana. Con formación médica y experiencia dedicada exclusivamente a las técnicas FUE y DHI, el Dr. Rosas se distingue por su enfoque en el <strong>diagnóstico capilar personalizado</strong> y el diseño artístico de la línea de cabello — garantizando resultados que se ven completamente naturales y se adaptan a los rasgos únicos de cada paciente.</p>
-        <!-- PLACEHOLDER: Agrega página de perfil del doctor /dr-jose-julian-rosas.html -->
+        <a href="/dr-jose-julian-rosas.html" class="surgeon-link">
+          Perfil completo: Conoce al Dr. Rosas <i class="fas fa-arrow-right"></i>
+        </a>
       </div>
 
     </div>
