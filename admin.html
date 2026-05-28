@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IHTC Capilaris — Panel de Citas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f1f5f9; min-height: 100vh; }
+
+    /* ═══════════════════════════════════
+       LOGIN SCREEN
+    ═══════════════════════════════════ */
+    #loginScreen {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f172a 0%, #1a3a5c 100%);
+    }
+    .login-box {
+      background: white; border-radius: 24px; padding: 52px 44px;
+      width: 100%; max-width: 400px; text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    }
+    .bat-icon { font-size: 3.5rem; line-height: 1; margin-bottom: 12px; filter: grayscale(0); }
+    .login-box h1 { font-size: 1.5rem; color: #1f2937; font-weight: 800; margin-bottom: 4px; }
+    .login-box .subtitle { color: #6b7280; font-size: 0.9rem; margin-bottom: 32px; }
+    .login-input {
+      width: 100%; padding: 15px; border: 2px solid #e5e7eb; border-radius: 12px;
+      font-size: 1.1rem; text-align: center; letter-spacing: 6px;
+      margin-bottom: 14px; outline: none; transition: border-color 0.2s;
+    }
+    .login-input:focus { border-color: #006BFF; box-shadow: 0 0 0 3px rgba(0,107,255,0.12); }
+    .login-btn {
+      width: 100%; padding: 15px; border: none; border-radius: 12px;
+      background: linear-gradient(135deg, #006BFF, #0AE8F0);
+      color: white; font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: opacity 0.2s; letter-spacing: 0.5px;
+    }
+    .login-btn:hover { opacity: 0.88; }
+    .login-error {
+      color: #dc2626; font-size: 0.85rem; margin-top: 12px;
+      display: none; align-items: center; justify-content: center; gap: 6px;
+    }
+
+    /* ═══════════════════════════════════
+       ADMIN PANEL
+    ═══════════════════════════════════ */
+    #adminPanel { display: none; }
+
+    .admin-header {
+      background: linear-gradient(135deg, #0f172a, #1a3a5c);
+      color: white; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .header-left .bat  { font-size: 1.5rem; }
+    .header-left h1 { font-size: 1.05rem; font-weight: 700; }
+    .header-left .tag {
+      font-size: 0.75rem; background: rgba(10,232,240,0.2);
+      border: 1px solid rgba(10,232,240,0.4); color: #0AE8F0;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .logout-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25);
+      color: white; padding: 8px 16px; border-radius: 8px;
+      font-size: 0.85rem; cursor: pointer; transition: background 0.2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.22); }
+
+    /* Week nav */
+    .week-nav {
+      background: white; padding: 14px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .week-nav h2 { font-size: 1rem; color: #1f2937; font-weight: 600; }
+    .nav-btn {
+      background: #f3f4f6; border: none; border-radius: 8px;
+      padding: 8px 14px; font-size: 0.85rem; cursor: pointer;
+      color: #374151; transition: all 0.15s; display: flex; align-items: center; gap: 5px;
+    }
+    .nav-btn:hover { background: #006BFF; color: white; }
+
+    /* Status bar */
+    .status-bar {
+      padding: 7px 20px; background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 0.78rem; color: #6b7280;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .status-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: #059669;
+      animation: blink 2.5s infinite;
+    }
+    .status-dot.offline { background: #dc2626; animation: none; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ═══════════════════════════════════
+       CALENDAR
+    ═══════════════════════════════════ */
+    .calendar-wrap { padding: 16px; overflow-x: auto; }
+
+    .calendar-grid {
+      min-width: 580px;
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1); background: white;
+    }
+
+    /* Header row */
+    .cal-head-row {
+      display: grid; grid-template-columns: 72px repeat(6, 1fr);
+      background: linear-gradient(135deg, #006BFF, #0AE8F0);
+    }
+    .cal-head-cell {
+      padding: 14px 6px; text-align: center; color: white;
+    }
+    .cal-head-cell .dn { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.85; }
+    .cal-head-cell .dd { font-size: 1.25rem; font-weight: 700; margin-top: 2px; }
+    .cal-head-cell.today-h { background: rgba(255,255,255,0.2); border-radius: 10px; margin: 4px; }
+
+    /* Slot rows */
+    .cal-row {
+      display: grid; grid-template-columns: 72px repeat(6, 1fr);
+      border-top: 1px solid #f0f0f0;
+    }
+    .cal-row:hover { background: #fafafa; }
+
+    .cal-time {
+      display: flex; align-items: center; justify-content: flex-end;
+      padding: 0 10px; font-size: 0.75rem; color: #9ca3af;
+      font-weight: 600; border-right: 2px solid #f0f0f0;
+    }
+
+    .cal-slot {
+      min-height: 54px; padding: 8px 4px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 3px;
+      border-left: 1px solid #f0f0f0;
+      cursor: pointer; transition: all 0.12s;
+      font-size: 0.78rem; font-weight: 700;
+    }
+    .cal-slot:hover { transform: scale(0.93); opacity: 0.85; }
+    .cal-slot i { font-size: 0.95rem; }
+    .cal-slot small { font-size: 0.68rem; font-weight: 500; opacity: 0.75; }
+
+    /* States */
+    .s-available { background: #f0fdf4; color: #059669; }
+    .s-available i::before { content: "\f00c"; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+
+    .s-admin    { background: #fef2f2; color: #dc2626; }
+    .s-admin i::before { content: "\f00d"; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+
+    .s-web      { background: #eff6ff; color: #2563eb; }
+    .s-web i::before { content: "\f0ac"; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+
+    .s-past     { background: #f9fafb; color: #d1d5db; cursor: not-allowed; }
+    .s-past:hover { transform: none; opacity: 1; }
+    .s-past i::before { content: "\f068"; font-family: 'Font Awesome 6 Free'; font-weight: 900; }
+
+    .today-col { outline: 2px solid rgba(0,107,255,0.35); outline-offset: -2px; }
+
+    /* Legend */
+    .legend {
+      display: flex; flex-wrap: wrap; gap: 16px;
+      padding: 14px 20px; background: white;
+      border-top: 1px solid #e5e7eb; font-size: 0.82rem;
+    }
+    .li { display: flex; align-items: center; gap: 7px; color: #374151; }
+    .ld { width: 14px; height: 14px; border-radius: 4px; }
+    .la { background:#f0fdf4; border:2px solid #059669; }
+    .lb { background:#fef2f2; border:2px solid #dc2626; }
+    .lw { background:#eff6ff; border:2px solid #2563eb; }
+
+    /* ═══════════════════════════════════
+       TOAST
+    ═══════════════════════════════════ */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1f2937; color: white;
+      padding: 11px 22px; border-radius: 12px;
+      font-size: 0.88rem; transition: transform 0.28s ease;
+      z-index: 999; white-space: nowrap; pointer-events: none;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════ LOGIN ═══════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="bat-icon">🦇</div>
+    <h1>IHTC Admin</h1>
+    <p class="subtitle">Panel de Citas &mdash; Authorized access only</p>
+    <input type="password" id="pwInput" class="login-input" placeholder="••••••••"
+           onkeydown="if(event.key==='Enter') doLogin()">
+    <button class="login-btn" onclick="doLogin()">
+      <i class="fas fa-lock"></i>&nbsp; Enter
+    </button>
+    <div class="login-error" id="loginErr">
+      <i class="fas fa-times-circle"></i> Wrong password. Try again.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ ADMIN ═══════════════════ -->
+<div id="adminPanel">
+
+  <header class="admin-header">
+    <div class="header-left">
+      <span class="bat">🦇</span>
+      <h1>IHTC Panel de Citas</h1>
+      <span class="tag">Batman Mode</span>
+    </div>
+    <button class="logout-btn" onclick="doLogout()">
+      <i class="fas fa-right-from-bracket"></i> Exit
+    </button>
+  </header>
+
+  <div class="week-nav">
+    <button class="nav-btn" onclick="shiftWeek(-1)">
+      <i class="fas fa-chevron-left"></i> Previous
+    </button>
+    <h2 id="weekLabel">Loading…</h2>
+    <button class="nav-btn" onclick="shiftWeek(1)">
+      Next <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+
+  <div class="status-bar">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusTxt">Connecting…</span>
+  </div>
+
+  <div class="calendar-wrap">
+    <div class="calendar-grid" id="grid"></div>
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="ld la"></div> Available — click to block</div>
+    <div class="li"><div class="ld lb"></div> Blocked by you — click to unblock</div>
+    <div class="li"><div class="ld lw"></div> Booked via website — click to unblock</div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+
+<script>
+  // ════════════════════════════════════════════════════
+  // ⚠️  PASO 1 — Pega aquí tu Firebase config
+  //     (igual que en index.html)
+  // ════════════════════════════════════════════════════
+  var FIREBASE_CONFIG = {
+    apiKey:            "[PLACEHOLDER_FIREBASE_API_KEY]",
+    authDomain:        "[PLACEHOLDER_FIREBASE_AUTH_DOMAIN]",
+    databaseURL:       "[PLACEHOLDER_FIREBASE_DB_URL]",
+    projectId:         "[PLACEHOLDER_FIREBASE_PROJECT_ID]",
+    storageBucket:     "[PLACEHOLDER_FIREBASE_PROJECT_ID].firebasestorage.app",
+    messagingSenderId: "[PLACEHOLDER_FIREBASE_SENDER_ID]",
+    appId:             "1:[PLACEHOLDER_FIREBASE_SENDER_ID]:web:df776ae204d3937b19587e"
+  };
+
+  // ════════════════════════════════════════════════════
+  // ⚠️  PASO 2 — Cambia esta contraseña cuando quieras
+  // ════════════════════════════════════════════════════
+  var ADMIN_PASS = 'Batman2024';
+
+  // ════════════════════════════════════════════════════
+  // Slots 9 AM – 5 PM
+  // ════════════════════════════════════════════════════
+  var SLOTS = [
+    {k:'09:00',l:'9 AM'}, {k:'10:00',l:'10 AM'}, {k:'11:00',l:'11 AM'},
+    {k:'12:00',l:'12 PM'},{k:'13:00',l:'1 PM'},  {k:'14:00',l:'2 PM'},
+    {k:'15:00',l:'3 PM'}, {k:'16:00',l:'4 PM'},  {k:'17:00',l:'5 PM'}
+  ];
+  var DAY_NAMES = ['Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  var db          = null;
+  var weekStart   = getMonday(new Date());
+  var slotsCache  = {};
+  var dbListener  = null;
+
+  // ── Login / Logout ────────────────────────────────
+  function doLogin() {
+    var val = document.getElementById('pwInput').value;
+    if (val === ADMIN_PASS) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').style.display  = 'block';
+      initFirebase();
+    } else {
+      var err = document.getElementById('loginErr');
+      err.style.display = 'flex';
+      document.getElementById('pwInput').value = '';
+      document.getElementById('pwInput').focus();
+      setTimeout(function(){ err.style.display='none'; }, 3000);
+    }
+  }
+
+  function doLogout() {
+    if (db && dbListener) { db.ref('ihtc-tq/slots').off('value', dbListener); dbListener = null; }
+    document.getElementById('adminPanel').style.display  = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    document.getElementById('pwInput').value = '';
+  }
+
+  // ── Firebase ─────────────────────────────────────
+  function initFirebase() {
+    if (!FIREBASE_CONFIG.apiKey || FIREBASE_CONFIG.apiKey === 'YOUR_FIREBASE_API_KEY') {
+      setStatus(false, '⚠️ Firebase not configured — edit admin.html and paste your config');
+      renderCalendar(); return;
+    }
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.database();
+      setStatus(true, 'Live — listening for changes');
+
+      dbListener = db.ref('ihtc-tq/slots').on('value', function(snap) {
+        slotsCache = snap.val() || {};
+        renderCalendar();
+        setStatus(true, 'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}));
+      }, function() {
+        setStatus(false, 'Connection error — check Firebase config');
+      });
+    } catch(e) {
+      setStatus(false, 'Firebase error: ' + e.message);
+      renderCalendar();
+    }
+  }
+
+  function setStatus(ok, msg) {
+    document.getElementById('statusDot').className = 'status-dot' + (ok ? '' : ' offline');
+    document.getElementById('statusTxt').textContent = msg;
+  }
+
+  // ── Calendar helpers ─────────────────────────────
+  function getMonday(d) {
+    var date = new Date(d); date.setHours(0,0,0,0);
+    var day  = date.getDay();
+    date.setDate(date.getDate() + (day===0 ? -6 : 1-day));
+    return date;
+  }
+
+  function dateStr(d) {
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+
+  function shiftWeek(dir) {
+    weekStart = new Date(weekStart);
+    weekStart.setDate(weekStart.getDate() + dir*7);
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    var now   = new Date();
+    var today = dateStr(now);
+
+    // Build Mon–Sat dates
+    var dates = [];
+    for (var i=0; i<6; i++) {
+      var d = new Date(weekStart); d.setDate(d.getDate()+i);
+      dates.push(d);
+    }
+
+    // Week label
+    var end = new Date(weekStart); end.setDate(end.getDate()+5);
+    document.getElementById('weekLabel').textContent =
+      weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' – ' +
+      end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    var html = '';
+
+    // Header row
+    html += '<div class="cal-head-row"><div class="cal-head-cell"></div>';
+    dates.forEach(function(d,i) {
+      var ds = dateStr(d);
+      var isToday = ds===today;
+      html += '<div class="cal-head-cell'+(isToday?' today-h':'')+'">'+
+        '<div class="dn">'+DAY_NAMES[i]+'</div>'+
+        '<div class="dd">'+d.getDate()+'</div></div>';
+    });
+    html += '</div>';
+
+    // Slot rows
+    SLOTS.forEach(function(slot) {
+      html += '<div class="cal-row">';
+      html += '<div class="cal-time">'+slot.l+'</div>';
+      dates.forEach(function(d) {
+        var ds   = dateStr(d);
+        var hour = parseInt(slot.k);
+        var isPast = ds < today || (ds===today && hour < now.getHours());
+        var val  = slotsCache[ds] && slotsCache[ds][slot.k];
+
+        var cls, icon, label;
+        if (isPast) {
+          cls='s-past'; icon='<i></i>'; label='';
+        } else if (!val) {
+          cls='s-available'; icon='<i></i>'; label='';
+        } else if (val==='web') {
+          cls='s-web'; icon='<i></i>'; label='<small>Website</small>';
+        } else {
+          cls='s-admin'; icon='<i></i>'; label='<small>Blocked</small>';
+        }
+
+        var tc = ds===today ? ' today-col' : '';
+        var click = isPast ? '' : 'onclick="toggleSlot(\''+ds+'\',\''+slot.k+'\')"';
+
+        html += '<div class="cal-slot '+cls+tc+'" '+click+'>'+icon+label+'</div>';
+      });
+      html += '</div>';
+    });
+
+    document.getElementById('grid').innerHTML = html;
+  }
+
+  // ── Toggle slot ──────────────────────────────────
+  async function toggleSlot(date, time) {
+    if (!db) { toast('⚠️ Firebase not connected'); return; }
+    var current = slotsCache[date] && slotsCache[date][time];
+    var ref = db.ref('ihtc-tq/slots/'+date+'/'+time);
+    try {
+      if (current) {
+        await ref.remove();
+        toast('✓ Unblocked: '+time+' on '+date);
+      } else {
+        await ref.set('admin');
+        toast('✕ Blocked: '+time+' on '+date);
+      }
+    } catch(e) { toast('Error: '+e.message); }
+  }
+
+  // ── Toast ─────────────────────────────────────────
+  var _tt;
+  function toast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(_tt);
+    _tt = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+</script>
+</body>
+</html>

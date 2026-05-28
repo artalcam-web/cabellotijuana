@@ -1,0 +1,47 @@
+# robots.txt — cabellotijuana.com
+# IHTC Capilaris — Trasplante Capilar Tijuana
+# Last updated: 2026-05-27
+
+# Allow all search engine bots
+User-agent: *
+Allow: /
+
+# Block admin and private areas
+Disallow: /admin.html
+Disallow: /admin/
+Disallow: /wp-admin/
+Disallow: /private/
+Disallow: /cgi-bin/
+
+# Block search result or filter pages
+Disallow: /search?
+Disallow: /*?*sort=
+Disallow: /*?*filter=
+
+# Sitemap
+Sitemap: https://cabellotijuana.com/sitemap.xml
+
+# Allow major AI crawlers (visibility in ChatGPT, Perplexity, etc.)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
