@@ -129,7 +129,9 @@
       box-shadow: 0 0 40px rgba(10,232,240,0.1);
     }
     .hero-video-wrap video {
-      width: 100%; display: block;
+      width: 100%; height: auto; display: block;
+      aspect-ratio: 9 / 16; object-fit: cover;
+      background: #000 url('/images/t21jj2-poster.jpg') center / cover no-repeat;
     }
 
     /* CTA buttons */
@@ -347,7 +349,7 @@
 
     <!-- VIDEO -->
     <div class="hero-video-wrap">
-      <video autoplay muted loop playsinline preload="metadata" poster="/images/promo-banner.png">
+      <video autoplay muted loop playsinline preload="metadata" poster="/images/t21jj2-poster.jpg" width="720" height="1280">
         <source src="/videos/t21jj2.mp4" type="video/mp4">
       </video>
     </div>
